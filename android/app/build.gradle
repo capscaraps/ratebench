@@ -1,0 +1,34 @@
+plugins { id 'com.android.application' }
+android {
+    def ks = file("../ratebench.jks")
+    if (ks.exists()) {
+        signingConfigs {
+            release {
+                storeFile ks
+                storePassword System.getenv("KS_PASS") ?: "ratebench"
+                keyAlias "ratebench"
+                keyPassword System.getenv("KS_PASS") ?: "ratebench"
+            }
+        }
+    }
+    namespace 'app.ratebench'
+    compileSdk 34
+    defaultConfig {
+        applicationId "app.ratebench"
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig ks.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }
